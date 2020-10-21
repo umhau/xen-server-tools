@@ -6,7 +6,7 @@
 
 set -ev
 
-if [ -z $1 ]; then echo "provide the exact name of the SR disk to remove, e.g. \"RAID6 7.3T\""; exit;fi
+[ -z $1 ] && echo "provide the exact name of the storage repository (SR) disk to remove, e.g. \"RAID6 7.3T\"" && exit
 
 echo "detaching the SR disk $1"
 
