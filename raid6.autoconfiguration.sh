@@ -17,6 +17,7 @@ set -ev
 # RAID 5 with the same number of physical drives.[
 
 multi_device_name="md0"
+# creates ext4 partition on RAID drive
 
 # USEAGE: ./script.sh a b d f g
 # where letters correspond to /dev/sd[a]. 
@@ -52,9 +53,10 @@ for drive in ${drive_list[@]}; do
 done
 
 # create multi device
-function join_by { local IFS="$1"; shift; echo "$*"; }
-comma_separated_drive_list=`join_by , "${drive_list[@]}"`
-echo "Drive letters: $comma_separated_drive_list"
+# function join_by { local IFS="$1"; shift; echo "$*"; }
+# comma_separated_drive_list=`join_by , "${drive_list[@]}"`
+# echo "Drive letters: $comma_separated_drive_list"
+
 echo "Drive count: $drive_count"
 echo "Multi device name: $multi_device_name"
 
@@ -64,7 +66,15 @@ echo "Multi device name: $multi_device_name"
 #     --level=6 \
 #     --raid-devices=$drive_count /dev/sd{$comma_separated_drive_list}1
 
-sudo mdadm  --create  --verbose /dev/md0 --level=6 --raid-devices=6 /dev/sd{b,c,d,e,f,g}1
+devicelist=$(eval echo  /dev/sd{`echo "$@" | tr ' ' ,`}1)
+
+echo "Drives: $devicelist"
+
+sudo mdadm  --create \
+      --verbose /dev/$multi_device_name \
+      --level=$drive_count \
+      --raid-devices=$drive_count $devicelist
+
 
 # backup multi device so it's persistent on reboot
 mkdir -p /etc/mdadm
