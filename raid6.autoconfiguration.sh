@@ -6,6 +6,16 @@ set -ev
 # of the HDDs you want to use.  Theoretically, RAID6 can have new drives added
 # to it without too much difficulty.
 
+# According to the Storage Networking Industry Association (SNIA), the 
+# definition of RAID 6 is: "Any form of RAID that can continue to execute read 
+# and write requests to all of a RAID array's virtual disks in the presence of
+# any two concurrent disk failures."
+
+# RAID 6 does not have a performance penalty for read operations, but it does 
+# have a performance penalty on write operations because of the overhead 
+# associated with parity calculations. RAID 6 can read up to the same speed as 
+# RAID 5 with the same number of physical drives.[
+
 multi_device_name="md0"
 
 # USEAGE: ./script.sh a b d f g
