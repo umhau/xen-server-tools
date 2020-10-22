@@ -18,6 +18,7 @@ set -ev
 
 multi_device_name="md0"
 # creates ext4 partition on RAID drive
+raid_level="6"
 
 # USEAGE: ./script.sh a b d f g
 # where letters correspond to /dev/sd[a]. 
@@ -72,7 +73,7 @@ echo "Drives: $devicelist"
 
 sudo mdadm  --create \
       --verbose /dev/$multi_device_name \
-      --level=$drive_count \
+      --level=$raid_level \
       --raid-devices=$drive_count $devicelist
 
 
