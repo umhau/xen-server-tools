@@ -13,8 +13,8 @@ level     drives    efficiency tolerance  perf.
 RAID 0    2         1          None       n         n
 RAID 1    2         1/n        n − 1      n [a]     1 [c]
 RAID 4    3         1 − 1/n    1 [b]      n − 1     n − 1 [e]
-RAID 5    3         1 − 1/n    1          n [e]     : 1/4 [e]
-RAID 6    4         1 − 2/n    2          n [e]     single sector: 1/6 [e]
+RAID 5    3         1 − 1/n    1          n [e]     1/4 [e]
+RAID 6    4         1 − 2/n    2          n [e]     1/6 [e]
 
 [a]  Theoretical maximum, as low as single-disk performance in practice.
 [b]  Just don't lose the pairity disk.
