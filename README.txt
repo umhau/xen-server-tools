@@ -2,7 +2,10 @@
 
 Commands, scripts, and tools that I use to manage my xcp-ng hypervisors.
 
-## RAID discussion
+## RAID
+
+use the raid-autoconf.sh script to create new raid drives. It will handle all
+the formatting, etc, so they just have to be present and unmounted. 
 
 Space, fault tolerance, and performance shown as ratios of single drive 
 performance.

@@ -47,6 +47,15 @@ echo -ne "\t ALL DATA ON ALL LISTED DRIVES WILL BE LOST! > "; read
 [ `which mdadm    2>/dev/null` ] || yum install mdadm
 [ `which xfsprogs 2>/dev/null` ] || yum install xfsprogs
 
+for drive in ${drive_list[@]}
+do
+    if mount | grep /dev/sd$drive > /dev/null
+    then 
+      echo "ERROR: /dev/sd$drive is mounted."
+      exit
+    fi
+done
+
 sync && sync && sync                                # folklore, but doesn't hurt
 
 for drive in ${drive_list[@]}; do                         # partition the drives
