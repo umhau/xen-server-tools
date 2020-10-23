@@ -8,7 +8,8 @@ use the raid-autoconf.sh script to create new raid drives. It will handle all
 the formatting, etc, so they just have to be present and unmounted. 
 
 Space, fault tolerance, and performance shown as ratios of single drive 
-performance.
+performance.  Thus, in a 4-drive RAID6 configuration: 1-2/[4] = 1-1/2 = 1/2,
+which means the available space is 1/2 the total capacity of the 4 drives.
 
 RAID      Minimum   Space      Fault      Read      Write performance
 level     drives    efficiency tolerance  perf.
