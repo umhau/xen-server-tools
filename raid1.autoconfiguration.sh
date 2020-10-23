@@ -72,11 +72,13 @@ sudo mkdir -p /mnt/$raid_device
 sudo mount /dev/$raid_device /mnt/$raid_device
 
 # add new mount to fstab
-echo "/dev/$raid_device /mnt/$raid_device ext4 defaults,nofail 0 0" | sudo tee -a /etc/fstab
+echo "/dev/$raid_device /mnt/$raid_device ext4 defaults,nofail,discard 0 0" | sudo tee -a /etc/fstab
 
 # verify
 df -h -t ext4
 lsblk
 cat /proc/mdstat
 sudo mdadm --detail /dev/$raid_device
+
+echo "check the progress of the drive mirroring with the command \"cat /proc/mdstat\""
 
