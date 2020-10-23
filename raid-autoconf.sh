@@ -35,7 +35,7 @@ done
 
 printf "Using RAID %s\n" "$raid_level"
 printf "Using /dev/sd[X] drive letters: %s\n" "$drive_list"
-printf "Multidevice specified:  /dev/%s\n" "$raid_multidevice"
+printf "Multidevice specified:  /dev/%s\n" "$raid_multi_device"
 printf "Filesystem chosen: %s\n" "$filesystemtype"
 
 drive_count=${#drive_list[@]}

@@ -7,6 +7,10 @@ Commands, scripts, and tools that I use to manage my xcp-ng hypervisors.
 use the raid-autoconf.sh script to create new raid drives. It will handle all
 the formatting, etc, so they just have to be present and unmounted. 
 
+To add another drive to the array later, see: 
+zackreed.me/adding-an-extra-disk-to-an-mdadm-array/, 
+ve3nrt.wordpress.com/2012/07/11/adding-a-drive-to-a-raid-6-array-with-mdadm/
+
 Space, fault tolerance, and performance shown as ratios of single drive 
 performance.
 
