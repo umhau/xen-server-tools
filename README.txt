@@ -12,7 +12,8 @@ zackreed.me/adding-an-extra-disk-to-an-mdadm-array/,
 ve3nrt.wordpress.com/2012/07/11/adding-a-drive-to-a-raid-6-array-with-mdadm/
 
 Space, fault tolerance, and performance shown as ratios of single drive 
-performance.
+performance.  Thus, in a 4-drive RAID6 configuration: 1-2/[4] = 1-1/2 = 1/2,
+which means the available space is 1/2 the total capacity of the 4 drives.
 
 RAID      Minimum   Space      Fault      Read      Write performance
 level     drives    efficiency tolerance  perf.
