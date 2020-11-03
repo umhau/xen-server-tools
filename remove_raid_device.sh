@@ -32,3 +32,4 @@ mdadm --remove "$raid_device" || true  # remove device - this may sometimes fail
 
 mdadm --zero-superblock $devicelist  # remove superblocks from all related disks
 
+rm -fv /etc/mdadm.conf        # delete file that identifies RAID devices on boot

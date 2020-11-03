@@ -107,7 +107,8 @@ sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
 
 # ensure the device is assembled on boot
 # sudo update-initramfs -u                         # not available on the system
-sudo update-grub                # WATCH OUT! could mess up a separate boot drive
+# sudo update-grub              # WATCH OUT! could mess up a separate boot drive
+mdadm --verbose --detail -scan > /etc/mdadm.conf       # used to id RAID devices 
 
 sudo mkfs.ext4 -F /dev/$raid_multi_device                # Create the filesystem
 
