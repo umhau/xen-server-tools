@@ -45,15 +45,6 @@ printf "Multidevice specified:  /dev/%s\n" "$raid_multi_device"
 printf "Filesystem chosen: %s\n" "$filesystemtype"
 printf "Number of drives to be formatted: %s\n" "$drive_count"
 
-# drive_count=${#drive_list[@]}
-
-echo "confirm: using drives ${drive_list[@]} for new software RAID $raid_level array."
-echo -ne "\t ALL DATA ON ALL LISTED DRIVES WILL BE LOST! > "; read
-
-[ `which parted   2>/dev/null` ] || yum install parted
-[ `which mdadm    2>/dev/null` ] || yum install mdadm
-[ `which xfsprogs 2>/dev/null` ] || yum install xfsprogs
-
 for drive in ${drive_list[@]}
 do
     if mount | grep /dev/sd$drive > /dev/null
@@ -68,6 +59,13 @@ do
       exit
     fi
 done
+
+echo "confirm: using drives ${drive_list[@]} for new software RAID $raid_level array."
+echo -ne "\t ALL DATA ON ALL LISTED DRIVES WILL BE LOST! > "; read
+
+[ `which parted   2>/dev/null` ] || yum install parted
+[ `which mdadm    2>/dev/null` ] || yum install mdadm
+[ `which xfsprogs 2>/dev/null` ] || yum install xfsprogs
 
 sync && sync && sync                                # folklore, but doesn't hurt
 
