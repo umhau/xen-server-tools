@@ -28,7 +28,7 @@ if mount | grep $raid_device > /dev/null; then umount $1; fi
 
 mdadm --stop "$raid_device"                             # deactivate RAID device
 
-mdadm --remove "$raid_device"          # remove device - this may sometimes fail
+mdadm --remove "$raid_device" || true  # remove device - this may sometimes fail
 
 mdadm --zero-superblock $devicelist  # remove superblocks from all related disks
 
