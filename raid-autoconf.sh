@@ -1,6 +1,7 @@
 #!/bin/bash
 
-clear && set e && set v
+set -e
+set -v
 
 # this script creates a new RAID device from scratch, given the drive letters 
 # of the HDDs you want to use and the raid level. 
@@ -10,7 +11,7 @@ clear && set e && set v
 # raid level options: 0, 1, 5, 6 
 # multidevice: the /dev/[xxx] name of the raid device comprising all the drives
 # filesystem type: choose from ext2, ext3, or ext4
-# drive list: just the letters of each /dev/sd[X] drive
+# drive list: JUST THE LETTERS of each /dev/sd[X] drive
 # bash raid-autoconf.sh -r 5 -m md1 -e ext4 -d "a b d g"
 
 # there is a confirmation sequence before anything is written.
@@ -25,6 +26,8 @@ while getopts ":r:d:m:e:" opt; do
     ;;
     d) drive_list="$OPTARG"
     ;;
+    c) drive_count="$OPTARG"
+    ;;
     \?) echo "Invalid option -$OPTARG. " >&2
     ;;
   esac
@@ -34,13 +37,15 @@ done
 [ -z "$raid_multi_device" ] && echo "multidevice not specified." && exit
 [ -z "$filesystemtype" ] && echo "filesystem type not specified." && exit
 [ -z "$drive_list" ] && echo "drive list not specified." && exit
+[ -z "$drive_count" ] && echo "number of drives not specified." && exit
 
 printf "Using RAID %s\n" "$raid_level"
 printf "Using /dev/sd[X] drive letters: %s\n" "$drive_list"
 printf "Multidevice specified:  /dev/%s\n" "$raid_multi_device"
 printf "Filesystem chosen: %s\n" "$filesystemtype"
+printf "Number of drives to be formatted: %s\n" "$drive_count"
 
-drive_count=${#drive_list[@]}
+# drive_count=${#drive_list[@]}
 
 echo "confirm: using drives ${drive_list[@]} for new software RAID $raid_level array."
 echo -ne "\t ALL DATA ON ALL LISTED DRIVES WILL BE LOST! > "; read
