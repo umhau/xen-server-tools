@@ -1,9 +1,11 @@
 #!/bin/bash
 
-clear && set -ev
+clear && set e && set v
 
 # this script creates a new RAID device from scratch, given the drive letters 
 # of the HDDs you want to use and the raid level. 
+
+# it only works on centos, since it was written for use with xen server.
 
 # raid level options: 0, 1, 5, 6 
 # multidevice: the /dev/[xxx] name of the raid device comprising all the drives
@@ -40,7 +42,7 @@ printf "Filesystem chosen: %s\n" "$filesystemtype"
 
 drive_count=${#drive_list[@]}
 
-echo "confirm: using drives ${drive_list[@]} for new software RAID 1 array."
+echo "confirm: using drives ${drive_list[@]} for new software RAID $raid_level array."
 echo -ne "\t ALL DATA ON ALL LISTED DRIVES WILL BE LOST! > "; read
 
 [ `which parted   2>/dev/null` ] || yum install parted
@@ -58,12 +60,23 @@ done
 
 sync && sync && sync                                # folklore, but doesn't hurt
 
-for drive in ${drive_list[@]}; do                         # partition the drives
-    echo -e "\tCreating partition on /dev/sd$drive"
+for drive in ${drive_list[@]}; do                   # create new partition label
+    echo -e "\tCreating partition label on /dev/sd$drive"
     sudo parted /dev/sd$drive mklabel gpt                                && sync
+done
+
+echo -n "press enter to continue > "; read
+
+for drive in ${drive_list[@]}; do                 # create new primary partition
+    echo -e "\tCreating new primary partition on /dev/sd$drive"
     sudo parted -a optimal /dev/sd$drive mkpart primary 0% 100%          && sync
+done
+
+for drive in ${drive_list[@]}; do                                 # turn on raid
+    echo -e "\tactivating RAID on /dev/sd$drive"
     sudo parted /dev/sd$drive set 1 raid on                              && sync
 done
+
 
 # verify drive formatting
 for drive in ${drive_list[@]}; do sudo parted /dev/sd$drive print; done
