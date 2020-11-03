@@ -60,6 +60,12 @@ do
     then 
       echo "ERROR: /dev/sd$drive is mounted."
       exit
+    elif cat /proc/mdstat | grep sd$drive > /dev/null
+    then
+      echo "ERROR: /dev/sd$drive is part of a preexisting RAID device. Remove"
+      echo "that device before proceeding."
+      echo "https://www.looklinux.com/how-to-remove-raid-in-linux/"
+      exit
     fi
 done
 
@@ -89,7 +95,7 @@ for drive in ${drive_list[@]}; do sudo parted /dev/sd$drive print; done
 echo "Drive count: $drive_count"
 echo "Multi device name: $raid_multi_device"
 
-devicelist=$(eval echo  /dev/sd{`echo "$@" | tr ' ' ,`}1)
+devicelist=$(eval echo  /dev/sd{`echo "$drive_list" | tr ' ' ,`}1)
 echo "Drives: $devicelist"
 
 sudo mdadm  --create \
