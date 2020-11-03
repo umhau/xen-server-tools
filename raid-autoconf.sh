@@ -16,7 +16,7 @@ set -v
 
 # there is a confirmation sequence before anything is written.
 
-while getopts ":r:d:m:e:" opt; do
+while getopts ":r:d:m:e:c:" opt; do
   case $opt in
     r) raid_level="$OPTARG"
     ;;
