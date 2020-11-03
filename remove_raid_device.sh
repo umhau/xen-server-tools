@@ -22,13 +22,13 @@ done
 devicelist=$(eval echo  /dev/sd{`echo "$drive_list" | tr ' ' ,`}1)
 
 echo "Drives connected to RAID: $devicelist"
-echo -n "Removing RAID device $1. Confirm > "; read
+echo -n "Removing RAID device $raid_device. Confirm > "; read
 
-if mount | grep $1 > /dev/null; then umount $1; fi    # unmount drive if mounted
+if mount | grep $raid_device > /dev/null; then umount $1; fi
 
-mdadm --stop "$1"                                       # deactivate RAID device
+mdadm --stop "$raid_device"                             # deactivate RAID device
 
-mdadm --remove "$1"                    # remove device - this may sometimes fail
+mdadm --remove "$raid_device"          # remove device - this may sometimes fail
 
 mdadm --zero-superblock $devicelist  # remove superblocks from all related disks
 
