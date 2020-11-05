@@ -39,14 +39,23 @@ done
 [ -z "$label" ]  && echo "partition label not given."         && exit
 [ -z "$mountpoint" ] && echo "mount point of new partition not given." && exit
 
-[ mount | grep -q $device ] && echo "ERROR: $drive is mounted." && exit
-
-[ mount | grep -q $mountpoint ] && echo "$mountpoint in use." && exit
-
-[ cat /proc/mdstat | grep -q $device ] && \
-    echo "ERROR: $device is in a RAID device, remove before proceeding." && exit 
-
-[ `whoami` != "root" ] && echo "run this script as root!" && exit
+if mount | grep -q $device > /dev/null
+then 
+    echo "ERROR: $drive is mounted."
+    exit
+elif mount | grep $mountpoint > /dev/null
+then
+    echo "$mountpoint in use."
+    exit
+elif cat /proc/mdstat | grep $device > /dev/null
+then
+   echo "ERROR: $device is in a RAID device, remove before proceeding."
+   exit 
+elif [ `whoami` != "root" ]
+then 
+    echo "run this script as root!"
+    exit
+fi
 
 echo "device to wipe: $device"
 echo "new filesystem: $fstype"
