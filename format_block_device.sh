@@ -8,20 +8,26 @@ set -v
 
 # RUN THIS SCRIPT AS ROOT
 
-# USAGE: bash format_block_device.sh -d /dev/xyz -f ext4 -l gpt -a /mnt/newdrive
+# bash format_block_device.sh \
+#   -d /dev/xyz \
+#   -f ext4 \
+#   -t gpt \
+#   -l partlabel \
+#   -a /mnt/newdrive
+#
 # d: the device to wipe
 # f: the new filesystem type to put on the device
-# g: the filesystem table type. gpt recommended, unless compatibility is needed.
+# t: the filesystem table type. gpt recommended, unless compatibility is needed.
 # l: partition label. this is used to identify the drive when automounted, so 
 #    ensure that it's unique.  It's not as good a system as using the UUID.
-# a: the location to automount the new drive
+# a: the location to auto mount the new drive
 
-while getopts ":d:f:l:a:" opt; do; case $opt in
+while getopts ":d:f:l:a:t:" opt; do; case $opt in
     d) device="$OPTARG" ;;
     f) fstype="$OPTARG" ;;
     t) table="$OPTARG" ;;
     l) label="$OPTARG" ;;
-    a) automount="$OPTARG" ;;
+    a) mountpoint="$OPTARG" ;;
     \?) echo "Invalid option -$OPTARG. " >&2 ;;
 esac; done
 
@@ -29,9 +35,11 @@ esac; done
 [ -z "$fstype" ] && echo "new filesystem type not specified." && exit
 [ -z "$table" ]  && echo "filesystem table type not given."   && exit
 [ -z "$label" ]  && echo "partition label not given."         && exit
-[ -z "$automount" ] && echo "mount point of new partition not given." && exit
+[ -z "$mountpoint" ] && echo "mount point of new partition not given." && exit
 
 [ mount | grep $device > /dev/null ] && echo "ERROR: $drive is mounted." && exit
+
+[ mount | grep $mountpoint > /dev/null ] && echo "$mountpoint in use." && exit
 
 [ cat /proc/mdstat | grep $device > /dev/null ] && \
     echo "ERROR: $device is in a RAID device, remove before proceeding." && exit 
@@ -59,17 +67,23 @@ partition="$device"1                                # new variable for /dev/xyz1
 
 mkfs.$fstype -L $label $partition       # create the filesystem on the partition
 
+mkdir -pv $mountpoint                                     # make the mount point
+
 cp /etc/fstab /etc/fstab.$(date +"%FT%H%M%S").bak            # back up the fstab
 
 # fs_uuid=$(lsblk -no UUID $partition)                 # get the filesystem UUID
 # using the UUID would be better, but then there's no way to detect duplicates
-# echo "UUID="$fs_uuid" $automount $fstype defaults 0 2" >> /etc/fstab
+# echo "UUID="$fs_uuid" $mountpoint $fstype defaults 0 2" >> /etc/fstab
 
 # if the script has already been run, remove the extra fstab entry
 [ grep $label /etc/fstab ] && sed "/$label/d" /etc/fstab > /etc/fstab
 
-echo "LABEL=$label $automount $fstype defaults 0 2" >> /etc/fstab    # automount
+echo "LABEL=$label $mountpoint $fstype defaults 0 2" >> /etc/fstab   # automount
+
+mount -a        # mount everything listed in the fstab - errors will be revealed
 
 lsblk -o NAME,FSTYPE,LABEL,UUID,MOUNTPOINT   # view the partition and filesystem
 
 cat /etc/fstab                             # check for superfluous fstab entries
+
+[ mount | grep $mountpoint > /dev/null ] && echo "SUCCESS"   # check for success
