@@ -22,14 +22,16 @@ set -v
 #    ensure that it's unique.  It's not as good a system as using the UUID.
 # a: the location to auto mount the new drive
 
-while getopts ":d:f:l:a:t:" opt; do; case $opt in
-    d) device="$OPTARG" ;;
-    f) fstype="$OPTARG" ;;
-    t) table="$OPTARG" ;;
-    l) label="$OPTARG" ;;
-    a) mountpoint="$OPTARG" ;;
-    \?) echo "Invalid option -$OPTARG. " >&2 ;;
-esac; done
+while getopts ":d:f:l:a:t:" opt; do
+    case $opt in
+        d) device="$OPTARG" ;;
+        f) fstype="$OPTARG" ;;
+        t) table="$OPTARG" ;;
+        l) label="$OPTARG" ;;
+        a) mountpoint="$OPTARG" ;;
+        \?) echo "Invalid option -$OPTARG. " >&2 ;;
+    esac
+done
 
 [ -z "$device" ] && echo "raid level not specified."          && exit
 [ -z "$fstype" ] && echo "new filesystem type not specified." && exit
