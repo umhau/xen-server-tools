@@ -2,6 +2,10 @@
 
 Commands, scripts, and tools that I use to manage my xcp-ng hypervisors.
 
+## add large raid device to xcp-ng.
+
+I put this in my blog. See: umhau.github.io/add-large-raid-device-to-xcp-ng/
+
 ## RAID
 
 use the raid-autoconf.sh script to create new raid drives. It will handle all
