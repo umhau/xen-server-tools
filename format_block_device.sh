@@ -72,7 +72,11 @@ parted -a optimal $device mkpart primary 0% 100% && sync # new primary partition
 
 partition="$device"1                                # new variable for /dev/xyz1
 
-[ partprobe -d -s $partition > /dev/null ] || echo "partition MISSING" && exit
+if ! partprobe -d -s /dev/xvdb2 &>/dev/null                  # check for success
+then
+    echo "partition MISSING"
+    exit
+fi
 
 mkfs.$fstype -L $label $partition       # create the filesystem on the partition
 
@@ -85,7 +89,7 @@ cp /etc/fstab /etc/fstab.$(date +"%FT%H%M%S").bak            # back up the fstab
 # echo "UUID="$fs_uuid" $mountpoint $fstype defaults 0 2" >> /etc/fstab
 
 # if the script has already been run, remove the extra fstab entry
-[ grep $label /etc/fstab ] && sed "/$label/d" /etc/fstab > /etc/fstab
+if grep $label /etc/fstab; then sed "/$label/d" /etc/fstab > /etc/fstab; fi
 
 echo "LABEL=$label $mountpoint $fstype defaults 0 2" >> /etc/fstab   # automount
 
@@ -95,4 +99,4 @@ lsblk -o NAME,FSTYPE,LABEL,UUID,MOUNTPOINT   # view the partition and filesystem
 
 cat /etc/fstab                             # check for superfluous fstab entries
 
-[ mount | grep $mountpoint > /dev/null ] && echo "SUCCESS"   # check for success
+if mount | grep -q $mountpoint > /dev/null; then echo "SUCCESS"; fi
