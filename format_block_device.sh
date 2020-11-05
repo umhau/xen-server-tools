@@ -72,7 +72,7 @@ parted -a optimal $device mkpart primary 0% 100% && sync # new primary partition
 
 partition="$device"1                                # new variable for /dev/xyz1
 
-if ! partprobe -d -s /dev/xvdb2 &>/dev/null                  # check for success
+if ! partprobe -d -s $partition &>/dev/null                  # check for success
 then
     echo "partition MISSING"
     exit
