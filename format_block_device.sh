@@ -57,8 +57,6 @@ echo -n "Confirm > " && read
 [ `which parted   2>/dev/null` ] || apt install parted
 [ `which mkfs     2>/dev/null` ] || apt install util-linux
 
-[ mount | grep $device > /dev/null ] && umount $device      # unmount if mounted
-
 parted $device mklabel $table && sync               # create new partition table
 
 parted -a optimal $device mkpart primary 0% 100% && sync # new primary partition
