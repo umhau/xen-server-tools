@@ -35,6 +35,12 @@ RAID 6    4         1 − 2/n    2          n [e]     1/6 [e]
 [e]  That is the worst-case scenario, when the minimum possible data (a single
      logical sector) needs to be written. Best-case scenario, given 
      sufficiently capable hardware and a full sector of data to write: n − 1.
+     This is because data is written in predetermined 'chunk' sizes; if the 
+     data is much smaller than the chunk, the whole chunk must still be 
+     written.
+
+RAID 0 is just an aggregation of all the disks, with no fault tolerance. If one
+of the drives dies, the whole thing is toast. 
 
 RAID 1 consists of an exact copy (or mirror) of a set of data on two or more 
 disks. The array can only be as big as the smallest member disk. This layout 
